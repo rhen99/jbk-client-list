@@ -7,32 +7,33 @@
     <b-form-group>
       <b-form-input placeholder="Write Here..." />
     </b-form-group>
+    <b-button type="submit" variant="primary" block>Search</b-button>
   </b-form>
 </template>
 
 <script>
-export default {
-  name: "Search",
-  data() {
-    return {
-      selected: "name",
-      options: [
-        {
-          text: "Search By Name",
-          value: "name",
-        },
-        {
-          text: "Search By Address",
-          value: "address",
-        },
-        {
-          text: "Search By Date",
-          value: "date",
-        },
-      ],
-    };
-  },
-};
+  export default {
+    name: "Search",
+    data() {
+      return {
+        selected: "name",
+        options: [
+          {
+            text: "Search By Name",
+            value: "name"
+          },
+          {
+            text: "Search By Address",
+            value: "address"
+          },
+          {
+            text: "Search By Date",
+            value: "date"
+          }
+        ]
+      };
+    }
+  };
 </script>
 
 <style></style>
