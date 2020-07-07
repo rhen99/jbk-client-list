@@ -4,9 +4,18 @@
     <b-form-group>
       <b-form-select :options="options" v-model="selected"></b-form-select>
     </b-form-group>
-    <b-form-group>
-      <b-form-input placeholder="Write Here..." />
-    </b-form-group>
+    <div>
+      <b-form-group v-if="selected === 'date'">
+        <b-form-datepicker v-model="search" id="date"></b-form-datepicker>
+      </b-form-group>
+      <b-form-group v-else-if="selected === 'place'">
+        <b-form-input v-model="search" placeholder="Write Place..." />
+      </b-form-group>
+      <b-form-group v-else>
+        <b-form-input v-model="search" placeholder="Write Name..." />
+      </b-form-group>
+    </div>
+
     <b-button type="submit" variant="primary" block>Search</b-button>
   </b-form>
 </template>
@@ -23,14 +32,15 @@
             value: "name"
           },
           {
-            text: "Search By Address",
-            value: "address"
+            text: "Search By Place",
+            value: "place"
           },
           {
             text: "Search By Date",
             value: "date"
           }
-        ]
+        ],
+        search: null
       };
     }
   };

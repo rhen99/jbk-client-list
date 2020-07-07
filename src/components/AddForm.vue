@@ -1,8 +1,6 @@
 <template>
   <div class="my-3">
-    <b-button variant="success" @click="modalShow = !modalShow"
-      >Add Client</b-button
-    >
+    <b-button variant="success" @click="modalShow = !modalShow">Add Client</b-button>
     <b-modal ref="addForm" v-model="modalShow" hide-footer>
       <div class="d-block">
         <b-form @submit.prevent="saveClient">
@@ -15,13 +13,7 @@
           </b-form-group>
 
           <b-form-group label="Bayad" label-for="payment">
-            <b-form-spinbutton
-              v-model="payment"
-              id="payment"
-              step="1"
-              min="2500"
-              max="10000"
-            ></b-form-spinbutton>
+            <b-form-spinbutton v-model="payment" id="payment" step="1" min="2500" max="10000"></b-form-spinbutton>
           </b-form-group>
 
           <b-form-group label="Date" label-for="date">
@@ -32,13 +24,12 @@
             <b-form-file
               placeholder="Choose a file or drop it here..."
               drop-placeholder="Drop file here..."
+              v-model="image"
             ></b-form-file>
           </b-form-group>
 
           <b-form-group>
-            <b-form-checkbox unchecked-value="no" value="yes" v-model="gamot"
-              >Kumuha ng Co-Amox?</b-form-checkbox
-            >
+            <b-form-checkbox unchecked-value="no" value="yes" v-model="gamot">Kumuha ng Co-Amox?</b-form-checkbox>
           </b-form-group>
 
           <b-form-group label="Ilang Co-Amox">
@@ -57,8 +48,7 @@
               unchecked-value="no"
               value="yes"
               v-model="quickheal"
-              >Kumuha ng Quick Heal?</b-form-checkbox
-            >
+            >Kumuha ng Quick Heal?</b-form-checkbox>
           </b-form-group>
 
           <b-form-group label="Ilang QuickHeal">
@@ -79,55 +69,61 @@
 </template>
 
 <script>
-import db from "./firebaseInit";
-export default {
-  name: "AddForm",
-  data() {
-    return {
-      modalShow: false,
-      payment: 0,
-      name: "",
-      place: "",
-      gamot: "no",
-      quickheal: "no",
-      gamot_qtty: 0,
-      quickheal_qtty: 0,
-      date: "",
-      image: null,
-    };
-  },
-  methods: {
-    saveClient() {
-      this.gamot_qtty = this.gamot === "no" ? null : this.gamot_qtty;
-      this.quickheal_qtty =
-        this.quickheal === "no" ? null : this.quickheal_qtty;
-
-      db.collection("client")
-        .add({
-          name: this.name,
-          place: this.place,
-          payment: this.payment,
-          date: this.date,
-          image: this.image,
-          gamot: this.gamot,
-          gamot_qtty: this.gamot_qtty,
-          quickheal: this.quickheal,
-          quickheal_qtty: this.quickheal_qtty,
-        })
-        .then(() => {
-          this.payment = 0;
-          this.name = "";
-          this.place = "";
-          this.gamot = "no";
-          this.quickheal = "no";
-          this.gamot_qtty = 0;
-          this.quickheal_qtty = 0;
-          this.date = "";
-          this.image = null;
-        });
+  import storage from "firebase/app";
+  import "firebase/storage";
+  import db from "./firebaseInit";
+  export default {
+    name: "AddForm",
+    data() {
+      return {
+        modalShow: false,
+        payment: 0,
+        name: "",
+        place: "",
+        gamot: "no",
+        quickheal: "no",
+        gamot_qtty: 0,
+        quickheal_qtty: 0,
+        date: "",
+        image: null
+      };
     },
-  },
-};
+    methods: {
+      saveClient() {
+        this.gamot_qtty = this.gamot === "no" ? null : this.gamot_qtty;
+        this.quickheal_qtty =
+          this.quickheal === "no" ? null : this.quickheal_qtty;
+
+        const storageRef = storage.storage().ref(`images/${this.image.name}`);
+
+        storageRef.put(this.image);
+
+        db.collection("client")
+          .add({
+            name: this.name,
+            place: this.place,
+            payment: this.payment,
+            date: this.date,
+            gamot: this.gamot,
+            gamot_qtty: this.gamot_qtty,
+            quickheal: this.quickheal,
+            quickheal_qtty: this.quickheal_qtty,
+            image: this.image.name
+          })
+          .then(() => {
+            this.payment = 0;
+            this.name = "";
+            this.place = "";
+            this.gamot = "no";
+            this.quickheal = "no";
+            this.gamot_qtty = 0;
+            this.quickheal_qtty = 0;
+            this.date = "";
+            this.image = null;
+          });
+      }
+    }
+  };
 </script>
 
 <style></style>
