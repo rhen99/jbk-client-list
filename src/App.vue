@@ -12,12 +12,24 @@
   import Navbar from "./components/Navbar";
   import Search from "./components/Search";
   import AddForm from "./components/AddForm";
+  import Clients from "./components/Clients";
+  import db from "./components/firebaseInit";
+
   export default {
     name: "App",
     components: {
       Navbar,
       Search,
-      AddForm
+      AddForm,
+      Clients
+    },
+    data(){
+      return {
+        clients: []
+      }
+    }
+    created(){
+      db.collection()
     }
   };
 </script>
