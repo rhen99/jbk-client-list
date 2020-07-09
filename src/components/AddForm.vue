@@ -98,7 +98,7 @@
 
         storageRef.put(this.image);
 
-        db.collection("client")
+        db.collection("clients")
           .add({
             name: this.name,
             place: this.place,
