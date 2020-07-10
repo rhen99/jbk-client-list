@@ -20,12 +20,8 @@
             <b-form-datepicker v-model="date" id="date"></b-form-datepicker>
           </b-form-group>
 
-          <b-form-group label="Image">
-            <b-form-file
-              placeholder="Choose a file or drop it here..."
-              drop-placeholder="Drop file here..."
-              v-model="image"
-            ></b-form-file>
+          <b-form-group label="Facebook Link">
+            <b-form-input v-model="facebook"></b-form-input>
           </b-form-group>
 
           <b-form-group>
@@ -69,8 +65,6 @@
 </template>
 
 <script>
-  import storage from "firebase/app";
-  import "firebase/storage";
   import db from "./firebaseInit";
   export default {
     name: "AddForm",
@@ -85,7 +79,7 @@
         gamot_qtty: 0,
         quickheal_qtty: 0,
         date: "",
-        image: null
+        facebook: ""
       };
     },
     methods: {
@@ -93,10 +87,6 @@
         this.gamot_qtty = this.gamot === "no" ? null : this.gamot_qtty;
         this.quickheal_qtty =
           this.quickheal === "no" ? null : this.quickheal_qtty;
-
-        const storageRef = storage.storage().ref(`images/${this.image.name}`);
-
-        storageRef.put(this.image);
 
         db.collection("clients")
           .add({
@@ -108,7 +98,7 @@
             gamot_qtty: this.gamot_qtty,
             quickheal: this.quickheal,
             quickheal_qtty: this.quickheal_qtty,
-            image: this.image.name
+            facebook: this.facebook
           })
           .then(() => {
             this.payment = 0;

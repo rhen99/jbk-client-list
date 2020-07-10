@@ -4,7 +4,7 @@
     <b-container class="mt-3">
       <AddForm />
       <Search />
-      <Clients :clients="clients" />
+      <Clients :clients="clients" @del-client="deleteClient" />
     </b-container>
   </div>
 </template>
@@ -24,6 +24,17 @@
       AddForm,
       Clients
     },
+    methods: {
+      deleteClient(id) {
+        db.collection("clients")
+          .doc(id)
+          .delete()
+          .then(() => {
+            this.clients.filter(client => {});
+          })
+          .catch(err => console.log(err));
+      }
+    },
     data() {
       return {
         clients: []
@@ -40,7 +51,7 @@
               place: doc.data().place,
               payment: doc.data().payment,
               date: doc.data().date,
-              image: doc.data().image,
+              facebook: doc.data().facebook,
               gamot: doc.data().gamot,
               gamot_qtty: doc.data().gamot_qtty,
               quickheal: doc.data().quickheal,

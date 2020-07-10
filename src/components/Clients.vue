@@ -1,7 +1,7 @@
 <template>
-  <div class="my-3">
-    <div v-for="client in clients" :key="client.id">
-      <Client :client="client" />
+  <div class="my-5">
+    <div v-for="client  in clients" :key="client.id">
+      <Client :client="client" @del-client="$emit('del-client', client.id)" />
     </div>
   </div>
 </template>
