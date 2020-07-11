@@ -1,6 +1,6 @@
 <template>
   <b-form>
-    <h4 class="my-2">Search Clients</h4>
+    <h4 class="my-2">Filter Clients</h4>
     <b-form-group>
       <b-form-select :options="options" v-model="selected"></b-form-select>
     </b-form-group>

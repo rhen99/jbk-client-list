@@ -2,7 +2,7 @@
   <div id="app">
     <Navbar />
     <b-container class="mt-3">
-      <AddForm />
+      <AddForm @add-client="addClient" />
       <Search />
       <Clients :clients="clients" @del-client="deleteClient" />
     </b-container>
@@ -30,9 +30,48 @@
           .doc(id)
           .delete()
           .then(() => {
-            this.clients.filter(client => {});
+            this.clients = this.clients.filter(client => client.id !== id);
           })
           .catch(err => console.log(err));
+      },
+      fetchClients() {
+        db.collection("clients")
+          .get()
+          .then(qss => {
+            qss.forEach(doc => {
+              const data = {
+                id: doc.id,
+                name: doc.data().name,
+                place: doc.data().place,
+                payment: doc.data().payment,
+                date: doc.data().date,
+                facebook: doc.data().facebook,
+                gamot: doc.data().gamot,
+                gamot_qtty: doc.data().gamot_qtty,
+                quickheal: doc.data().quickheal,
+                quickheal_qtty: doc.data().quickheal_qtty
+              };
+              this.clients.push(data);
+            });
+          });
+      },
+      addClient(newTodo) {
+        db.collection("clients")
+          .add({
+            name: newTodo.name,
+            place: newTodo.place,
+            payment: newTodo.payment,
+            date: newTodo.date,
+            gamot: newTodo.gamot,
+            gamot_qtty: newTodo.gamot_qtty,
+            quickheal: newTodo.quickheal,
+            quickheal_qtty: newTodo.quickheal_qtty,
+            facebook: newTodo.facebook
+          })
+          .then(() => {
+            this.clients = [];
+            this.fetchClients();
+          });
       }
     },
     data() {
@@ -41,25 +80,7 @@
       };
     },
     created() {
-      db.collection("clients")
-        .get()
-        .then(qss => {
-          qss.forEach(doc => {
-            const data = {
-              id: doc.id,
-              name: doc.data().name,
-              place: doc.data().place,
-              payment: doc.data().payment,
-              date: doc.data().date,
-              facebook: doc.data().facebook,
-              gamot: doc.data().gamot,
-              gamot_qtty: doc.data().gamot_qtty,
-              quickheal: doc.data().quickheal,
-              quickheal_qtty: doc.data().quickheal_qtty
-            };
-            this.clients.push(data);
-          });
-        });
+      this.fetchClients();
     }
   };
 </script>

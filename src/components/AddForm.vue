@@ -57,7 +57,7 @@
               v-model="quickheal_qtty"
             ></b-form-spinbutton>
           </b-form-group>
-          <b-button type="submit" block variant="success">Save Client</b-button>
+          <b-button type="submit" block variant="success">Filter Client</b-button>
         </b-form>
       </div>
     </b-modal>
@@ -65,7 +65,6 @@
 </template>
 
 <script>
-  import db from "./firebaseInit";
   export default {
     name: "AddForm",
     data() {
@@ -83,34 +82,32 @@
       };
     },
     methods: {
-      saveClient() {
+      saveClient(e) {
+        e.preventDefault();
         this.gamot_qtty = this.gamot === "no" ? null : this.gamot_qtty;
         this.quickheal_qtty =
           this.quickheal === "no" ? null : this.quickheal_qtty;
-
-        db.collection("clients")
-          .add({
-            name: this.name,
-            place: this.place,
-            payment: this.payment,
-            date: this.date,
-            gamot: this.gamot,
-            gamot_qtty: this.gamot_qtty,
-            quickheal: this.quickheal,
-            quickheal_qtty: this.quickheal_qtty,
-            facebook: this.facebook
-          })
-          .then(() => {
-            this.payment = 0;
-            this.name = "";
-            this.place = "";
-            this.gamot = "no";
-            this.quickheal = "no";
-            this.gamot_qtty = 0;
-            this.quickheal_qtty = 0;
-            this.date = "";
-            this.image = null;
-          });
+        const newTodo = {
+          name: this.name,
+          place: this.place,
+          payment: this.payment,
+          date: this.date,
+          gamot: this.gamot,
+          gamot_qtty: this.gamot_qtty,
+          quickheal: this.quickheal,
+          quickheal_qtty: this.quickheal_qtty,
+          facebook: this.facebook
+        };
+        this.$emit("add-client", newTodo);
+        this.payment = 0;
+        this.name = "";
+        this.place = "";
+        this.gamot = "no";
+        this.quickheal = "no";
+        this.gamot_qtty = 0;
+        this.quickheal_qtty = 0;
+        this.date = "";
+        this.facebook = "";
       }
     }
   };
