@@ -15,8 +15,6 @@
         <b-form-input v-model="search" placeholder="Write Name..." />
       </b-form-group>
     </div>
-
-    <b-button type="submit" variant="primary" block>Search</b-button>
   </b-form>
 </template>
 
@@ -28,20 +26,30 @@
         selected: "name",
         options: [
           {
-            text: "Search By Name",
+            text: "Filter By Name",
             value: "name"
           },
           {
-            text: "Search By Place",
+            text: "Filter By Place",
             value: "place"
           },
           {
-            text: "Search By Date",
+            text: "Filter By Date",
             value: "date"
           }
         ],
         search: null
       };
+    },
+    created() {},
+    methods: {
+      filterClients() {
+        const filterOptions = {
+          text: this.search,
+          selected: this.selected
+        };
+        this.$emit("filter-clients", filterOptions);
+      }
     }
   };
 </script>
