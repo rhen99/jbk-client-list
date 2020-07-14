@@ -3,7 +3,7 @@
     <Navbar />
     <b-container class="mt-3">
       <AddForm @add-client="addClient" />
-      <Search />
+      <Search @filter-clients="filterClients" />
       <Clients :clients="clients" @del-client="deleteClient" />
     </b-container>
   </div>
@@ -72,6 +72,17 @@
             this.clients = [];
             this.fetchClients();
           });
+      },
+      filterClients(obj) {
+        if (obj.text === "") {
+          this.clients = [];
+          this.fetchClients();
+        } else {
+          this.clients = this.clients.filter(client => {
+            const q = new RegExp(obj.text, "gi");
+            return client[obj.selected].match(q);
+          });
+        }
       }
     },
     data() {

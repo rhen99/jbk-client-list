@@ -6,13 +6,13 @@
     </b-form-group>
     <div>
       <b-form-group v-if="selected === 'date'">
-        <b-form-datepicker v-model="search" id="date"></b-form-datepicker>
+        <b-form-datepicker @input="filterClients" v-model="search" id="date"></b-form-datepicker>
       </b-form-group>
       <b-form-group v-else-if="selected === 'place'">
-        <b-form-input v-model="search" placeholder="Write Place..." />
+        <b-form-input v-model="search" @update="filterClients" placeholder="Write Place..." />
       </b-form-group>
       <b-form-group v-else>
-        <b-form-input v-model="search" placeholder="Write Name..." />
+        <b-form-input v-model="search" @update="filterClients" placeholder="Write Name..." />
       </b-form-group>
     </div>
   </b-form>

@@ -2,6 +2,15 @@
   <div class="my-3">
     <b-button variant="success" @click="modalShow = !modalShow">Add Client</b-button>
     <b-modal ref="addForm" v-model="modalShow" hide-footer>
+      <b-alert
+        :show="dismissCountDown"
+        dismissible
+        variant="success"
+        @dismissed="dismissCountDown=0"
+        @dismiss-count-down="countDownChanged"
+      >
+        <p>Added Successfully</p>
+      </b-alert>
       <div class="d-block">
         <b-form @submit.prevent="saveClient">
           <b-form-group label="Client Name" label-for="name">
@@ -57,7 +66,7 @@
               v-model="quickheal_qtty"
             ></b-form-spinbutton>
           </b-form-group>
-          <b-button type="submit" block variant="success">Filter Client</b-button>
+          <b-button type="submit" block variant="success">Add Client</b-button>
         </b-form>
       </div>
     </b-modal>
@@ -78,10 +87,18 @@
         gamot_qtty: 0,
         quickheal_qtty: 0,
         date: "",
+        dismissSecs: 10,
+        dismissCountDown: 0,
         facebook: ""
       };
     },
     methods: {
+      showAlert() {
+        this.dismissCountDown = this.dismissSecs;
+      },
+      countDownChanged(dismissCountDown) {
+        this.dismissCountDown = dismissCountDown;
+      },
       saveClient(e) {
         e.preventDefault();
         this.gamot_qtty = this.gamot === "no" ? null : this.gamot_qtty;
@@ -108,6 +125,7 @@
         this.quickheal_qtty = 0;
         this.date = "";
         this.facebook = "";
+        this.showAlert();
       }
     }
   };
