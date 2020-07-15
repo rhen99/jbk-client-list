@@ -2,17 +2,17 @@
   <div class="my-3">
     <b-button variant="success" @click="modalShow = !modalShow">Add Client</b-button>
     <b-modal ref="addForm" v-model="modalShow" hide-footer>
-      <b-alert
-        :show="dismissCountDown"
-        dismissible
-        variant="success"
-        @dismissed="dismissCountDown=0"
-        @dismiss-count-down="countDownChanged"
-      >
-        <p>Added Successfully</p>
-      </b-alert>
       <div class="d-block">
         <b-form @submit.prevent="saveClient">
+          <b-alert
+            :show="dismissCountDown"
+            dismissible
+            variant="success"
+            @dismissed="dismissCountDown=0"
+            @dismiss-count-down="countDownChanged"
+          >
+            <p>Added Successfully</p>
+          </b-alert>
           <b-form-group label="Client Name" label-for="name">
             <b-form-input id="name" v-model="name"></b-form-input>
           </b-form-group>
@@ -25,12 +25,17 @@
             <b-form-spinbutton v-model="payment" id="payment" step="1" min="2500" max="10000"></b-form-spinbutton>
           </b-form-group>
 
+          <b-form-group label="Ilang aso" label-for="heads">
+            <b-form-spinbutton v-model="heads" id="heads" step="1" min="1" max="20"></b-form-spinbutton>
+          </b-form-group>
+
           <b-form-group label="Date" label-for="date">
             <b-form-datepicker v-model="date" id="date"></b-form-datepicker>
           </b-form-group>
 
-          <b-form-group label="Facebook Link">
-            <b-form-input v-model="facebook"></b-form-input>
+          <b-form-group label="Facebook Link" label-for="facebook">
+            <b-form-input id="facebook
+            " v-model="facebook"></b-form-input>
           </b-form-group>
 
           <b-form-group>
@@ -89,7 +94,8 @@
         date: "",
         dismissSecs: 10,
         dismissCountDown: 0,
-        facebook: ""
+        facebook: "",
+        heads: 1
       };
     },
     methods: {
@@ -113,7 +119,8 @@
           gamot_qtty: this.gamot_qtty,
           quickheal: this.quickheal,
           quickheal_qtty: this.quickheal_qtty,
-          facebook: this.facebook
+          facebook: this.facebook,
+          heads: this.heads
         };
         this.$emit("add-client", newTodo);
         this.payment = 0;
@@ -121,10 +128,11 @@
         this.place = "";
         this.gamot = "no";
         this.quickheal = "no";
-        this.gamot_qtty = 0;
-        this.quickheal_qtty = 0;
+        this.gamot_qtty = 1;
+        this.quickheal_qtty = 1;
         this.date = "";
         this.facebook = "";
+        this.heads = 1;
         this.showAlert();
       }
     }

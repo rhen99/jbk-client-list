@@ -44,6 +44,7 @@
                 name: doc.data().name,
                 place: doc.data().place,
                 payment: doc.data().payment,
+                heads: doc.data().heads,
                 date: doc.data().date,
                 facebook: doc.data().facebook,
                 gamot: doc.data().gamot,
@@ -66,7 +67,8 @@
             gamot_qtty: newTodo.gamot_qtty,
             quickheal: newTodo.quickheal,
             quickheal_qtty: newTodo.quickheal_qtty,
-            facebook: newTodo.facebook
+            facebook: newTodo.facebook,
+            heads: newTodo.heads
           })
           .then(() => {
             this.clients = [];
