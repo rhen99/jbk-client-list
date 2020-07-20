@@ -1,8 +1,8 @@
 <template>
-  <b-container class="mt-5">
+  <b-container class="mt-5" @submit.prevent="login">
     <b-form>
       <b-form-group label="Password" label-for="password">
-        <b-form-input type="password" id="password"></b-form-input>
+        <b-form-input type="password" id="password" v-model="password"></b-form-input>
       </b-form-group>
       <b-button type="submit" block variant="primary">Sign in</b-button>
     </b-form>
@@ -10,13 +10,31 @@
 </template>
 
 <script>
+  import firebase from "firebase/app";
+  import "firebase/auth";
   export default {
     name: "Login",
     data() {
       return {
-        email: null,
+        email: "frendly_shot@gmail.com",
         password: null
       };
+    },
+    methods: {
+      login() {
+        firebase
+          .auth()
+          .signInWithEmailAndPassword(this.email, this.password)
+          .then(
+            () => {
+              alert("You are logged in");
+              this.$router.push("/");
+            },
+            err => {
+              alert(err.message);
+            }
+          );
+      }
     }
   };
 </script>
