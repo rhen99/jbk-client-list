@@ -3,7 +3,7 @@
     <b-container>
       <b-navbar-brand>Client List</b-navbar-brand>
       <b-navbar-nav class="ml-auto">
-        <b-nav-item @click="logout">
+        <b-nav-item @click="logout" v-if="isLoggedIn">
           <b-icon-caret-left-fill></b-icon-caret-left-fill>Log Out
         </b-nav-item>
       </b-navbar-nav>
@@ -28,8 +28,14 @@
           .auth()
           .signOut()
           .then(() => {
-            this.$router.push("/login");
+            this.$router.go({ path: this.$router.path });
           });
+      }
+    },
+    created() {
+      if (firebase.auth().currentUser) {
+        this.isLoggedIn = true;
+        this.currentUser = firebase.auth().currentUser.email;
       }
     }
   };

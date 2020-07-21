@@ -38,6 +38,10 @@
             " v-model="facebook"></b-form-input>
           </b-form-group>
 
+          <b-form-group label="Crop Images" label-for="images">
+            <b-form-file multiple style="overflow: hidden" id="images" v-model="images"></b-form-file>
+          </b-form-group>
+
           <b-form-group>
             <b-form-checkbox unchecked-value="no" value="yes" v-model="gamot">Kumuha ng Co-Amox?</b-form-checkbox>
           </b-form-group>
@@ -79,6 +83,8 @@
 </template>
 
 <script>
+  import firebase from "firebase/app";
+  import "firebase/storage";
   export default {
     name: "AddForm",
     data() {
@@ -95,7 +101,8 @@
         dismissSecs: 10,
         dismissCountDown: 0,
         facebook: "",
-        heads: 1
+        heads: 1,
+        images: []
       };
     },
     methods: {
@@ -108,8 +115,19 @@
       saveClient(e) {
         e.preventDefault();
         this.gamot_qtty = this.gamot === "no" ? null : this.gamot_qtty;
+
         this.quickheal_qtty =
           this.quickheal === "no" ? null : this.quickheal_qtty;
+
+        this.images.forEach(image => {
+          firebase
+            .storage()
+            .ref()
+            .child(`images/${image.name}`)
+            .put(image);
+        });
+
+        this.images = this.images.map(image => image.name);
         const newTodo = {
           name: this.name,
           place: this.place,
@@ -120,7 +138,8 @@
           quickheal: this.quickheal,
           quickheal_qtty: this.quickheal_qtty,
           facebook: this.facebook,
-          heads: this.heads
+          heads: this.heads,
+          images: this.images
         };
         this.$emit("add-client", newTodo);
         this.payment = 0;
@@ -133,6 +152,7 @@
         this.date = "";
         this.facebook = "";
         this.heads = 1;
+        this.images = [];
         this.showAlert();
       }
     }
