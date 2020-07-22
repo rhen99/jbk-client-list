@@ -45,7 +45,8 @@
                 gamot: doc.data().gamot,
                 gamot_qtty: doc.data().gamot_qtty,
                 quickheal: doc.data().quickheal,
-                quickheal_qtty: doc.data().quickheal_qtty
+                quickheal_qtty: doc.data().quickheal_qtty,
+                images: doc.data().images
               };
               this.clients.push(data);
             });
