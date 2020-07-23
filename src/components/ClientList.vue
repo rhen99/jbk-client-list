@@ -11,29 +11,45 @@
   import AddForm from "./AddForm";
   import Clients from "./Clients";
   import db from "./firebaseInit";
+  import firebase from "firebase/app";
+  import "firebase/storage";
 
   export default {
     name: "ClientList",
     components: {
       Search,
       AddForm,
-      Clients
+      Clients,
     },
     methods: {
-      deleteClient(id) {
+      deleteClient(deletedClient) {
         db.collection("clients")
-          .doc(id)
+          .doc(deletedClient.id)
           .delete()
           .then(() => {
-            this.clients = this.clients.filter(client => client.id !== id);
+            this.clients = this.clients.filter(
+              (client) => client.id !== deletedClient.id
+            );
           })
-          .catch(err => console.log(err));
+          .catch((err) => console.log(err));
+
+        deletedClient.images.forEach((image) => {
+          firebase
+            .storage()
+            .ref()
+            .child(`images/${image}`)
+            .delete()
+            .then(() => {})
+            .catch((err) => {
+              console.log(err);
+            });
+        });
       },
       fetchClients() {
         db.collection("clients")
           .get()
-          .then(qss => {
-            qss.forEach(doc => {
+          .then((qss) => {
+            qss.forEach((doc) => {
               const data = {
                 id: doc.id,
                 name: doc.data().name,
@@ -46,7 +62,7 @@
                 gamot_qtty: doc.data().gamot_qtty,
                 quickheal: doc.data().quickheal,
                 quickheal_qtty: doc.data().quickheal_qtty,
-                images: doc.data().images
+                images: doc.data().images,
               };
               this.clients.push(data);
             });
@@ -65,7 +81,7 @@
             quickheal_qtty: newTodo.quickheal_qtty,
             facebook: newTodo.facebook,
             heads: newTodo.heads,
-            images: newTodo.images
+            images: newTodo.images,
           })
           .then(() => {
             this.clients = [];
@@ -77,21 +93,21 @@
           this.clients = [];
           this.fetchClients();
         } else {
-          this.clients = this.clients.filter(client => {
+          this.clients = this.clients.filter((client) => {
             const q = new RegExp(obj.text, "gi");
             return client[obj.selected].match(q);
           });
         }
-      }
+      },
     },
     data() {
       return {
-        clients: []
+        clients: [],
       };
     },
     created() {
       this.fetchClients();
-    }
+    },
   };
 </script>
 

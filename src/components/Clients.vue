@@ -1,7 +1,7 @@
 <template>
   <div class="my-5">
     <div v-for="client  in clients" :key="client.id">
-      <Client :client="client" @del-client="$emit('del-client', client.id)" />
+      <Client :client="client" @del-client="deleteClient" />
     </div>
   </div>
 </template>
@@ -12,8 +12,13 @@
     name: "Clients",
     props: ["clients"],
     components: {
-      Client
-    }
+      Client,
+    },
+    methods: {
+      deleteClient(deletedClient) {
+        this.$emit("del-client", deletedClient);
+      },
+    },
   };
 </script>
 
