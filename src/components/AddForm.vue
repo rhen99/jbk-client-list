@@ -8,7 +8,7 @@
             :show="dismissCountDown"
             dismissible
             variant="success"
-            @dismissed="dismissCountDown=0"
+            @dismissed="dismissCountDown = 0"
             @dismiss-count-down="countDownChanged"
           >
             <p>Added Successfully</p>
@@ -36,6 +36,10 @@
           <b-form-group label="Facebook Link" label-for="facebook">
             <b-form-input id="facebook
             " v-model="facebook"></b-form-input>
+          </b-form-group>
+
+          <b-form-group label="Crop Images" label-for="images">
+            <b-form-file multiple style="overflow: hidden" id="images" v-model="images"></b-form-file>
           </b-form-group>
 
           <b-form-group>
@@ -79,6 +83,9 @@
 </template>
 
 <script>
+  import firebase from "firebase/app";
+  import "firebase/storage";
+  import { v4 as uuidv4 } from "uuid";
   export default {
     name: "AddForm",
     data() {
@@ -95,7 +102,8 @@
         dismissSecs: 10,
         dismissCountDown: 0,
         facebook: "",
-        heads: 1
+        heads: 1,
+        images: [],
       };
     },
     methods: {
@@ -108,8 +116,18 @@
       saveClient(e) {
         e.preventDefault();
         this.gamot_qtty = this.gamot === "no" ? null : this.gamot_qtty;
+
         this.quickheal_qtty =
           this.quickheal === "no" ? null : this.quickheal_qtty;
+
+        this.images = this.images.map((image) => {
+          const originalName = image.name.split(".");
+          const newName = `${originalName[0]}${Date.now()}${uuidv4()}.${
+            originalName[1]
+          }`;
+          firebase.storage().ref().child(`images/${newName}`).put(image);
+          return newName;
+        });
         const newTodo = {
           name: this.name,
           place: this.place,
@@ -120,7 +138,8 @@
           quickheal: this.quickheal,
           quickheal_qtty: this.quickheal_qtty,
           facebook: this.facebook,
-          heads: this.heads
+          heads: this.heads,
+          images: this.images,
         };
         this.$emit("add-client", newTodo);
         this.payment = 0;
@@ -133,9 +152,10 @@
         this.date = "";
         this.facebook = "";
         this.heads = 1;
+        this.images = [];
         this.showAlert();
-      }
-    }
+      },
+    },
   };
 </script>
 
