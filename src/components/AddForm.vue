@@ -8,7 +8,7 @@
             :show="dismissCountDown"
             dismissible
             variant="success"
-            @dismissed="dismissCountDown=0"
+            @dismissed="dismissCountDown = 0"
             @dismiss-count-down="countDownChanged"
           >
             <p>Added Successfully</p>
@@ -85,6 +85,7 @@
 <script>
   import firebase from "firebase/app";
   import "firebase/storage";
+  import { v4 as uuidv4 } from "uuid";
   export default {
     name: "AddForm",
     data() {
@@ -102,7 +103,7 @@
         dismissCountDown: 0,
         facebook: "",
         heads: 1,
-        images: []
+        images: [],
       };
     },
     methods: {
@@ -119,15 +120,14 @@
         this.quickheal_qtty =
           this.quickheal === "no" ? null : this.quickheal_qtty;
 
-        this.images.forEach(image => {
-          firebase
-            .storage()
-            .ref()
-            .child(`images/${image.name}`)
-            .put(image);
+        this.images = this.images.map((image) => {
+          const originalName = image.name.split(".");
+          const newName = `${originalName[0]}${Date.now()}${uuidv4()}.${
+            originalName[1]
+          }`;
+          firebase.storage().ref().child(`images/${newName}`).put(image);
+          return newName;
         });
-
-        this.images = this.images.map(image => image.name);
         const newTodo = {
           name: this.name,
           place: this.place,
@@ -139,7 +139,7 @@
           quickheal_qtty: this.quickheal_qtty,
           facebook: this.facebook,
           heads: this.heads,
-          images: this.images
+          images: this.images,
         };
         this.$emit("add-client", newTodo);
         this.payment = 0;
@@ -154,8 +154,8 @@
         this.heads = 1;
         this.images = [];
         this.showAlert();
-      }
-    }
+      },
+    },
   };
 </script>
 
