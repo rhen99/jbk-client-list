@@ -17,7 +17,7 @@
     data() {
       return {
         email: "frendly_shot@gmail.com",
-        password: null
+        password: null,
       };
     },
     methods: {
@@ -28,14 +28,15 @@
           .then(
             () => {
               alert("You are logged in");
-              this.$router.go({ path: this.$router.path });
+              this.$router.push("/");
+              window.location.reload();
             },
-            err => {
+            (err) => {
               alert(err.message);
             }
           );
-      }
-    }
+      },
+    },
   };
 </script>
 

@@ -19,7 +19,7 @@
     data() {
       return {
         isLoggedIn: false,
-        currentUser: false
+        currentUser: false,
       };
     },
     methods: {
@@ -28,16 +28,17 @@
           .auth()
           .signOut()
           .then(() => {
-            this.$router.go({ path: this.$router.path });
+            this.$router.push("/login");
+            window.location.reload();
           });
-      }
+      },
     },
     created() {
       if (firebase.auth().currentUser) {
         this.isLoggedIn = true;
         this.currentUser = firebase.auth().currentUser.email;
       }
-    }
+    },
   };
 </script>
 
