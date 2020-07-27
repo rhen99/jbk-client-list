@@ -12,34 +12,33 @@
 </template>
 
 <script>
-  import firebase from "firebase/app";
-  import "firebase/auth";
-  export default {
-    name: "Navbar",
-    data() {
-      return {
-        isLoggedIn: false,
-        currentUser: false,
-      };
+import firebase from "firebase/app";
+import "firebase/auth";
+export default {
+  name: "Navbar",
+  data() {
+    return {
+      isLoggedIn: false,
+      currentUser: false,
+    };
+  },
+  methods: {
+    logout() {
+      firebase
+        .auth()
+        .signOut()
+        .then(() => {
+          window.location.reload();
+        });
     },
-    methods: {
-      logout() {
-        firebase
-          .auth()
-          .signOut()
-          .then(() => {
-            this.$router.push("/login");
-            window.location.reload();
-          });
-      },
-    },
-    created() {
-      if (firebase.auth().currentUser) {
-        this.isLoggedIn = true;
-        this.currentUser = firebase.auth().currentUser.email;
-      }
-    },
-  };
+  },
+  created() {
+    if (firebase.auth().currentUser) {
+      this.isLoggedIn = true;
+      this.currentUser = firebase.auth().currentUser.email;
+    }
+  },
+};
 </script>
 
 <style scoped></style>
